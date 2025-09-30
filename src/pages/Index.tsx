@@ -7,8 +7,10 @@ import OurPromise from '@/components/OurPromise';
 import ComponentsSection from '@/components/ComponentsSection';
 import Impact from '@/components/Impact';
 import Blog from '@/components/Blog';
+import Testimonials from '@/components/testimonals';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+
 
 const Index = () => {
   return (
@@ -23,6 +25,7 @@ const Index = () => {
         <OurPromise />
         <Impact />
         <Blog />
+        <Testimonials />
         <Contact />
       </main>
       <Footer />
