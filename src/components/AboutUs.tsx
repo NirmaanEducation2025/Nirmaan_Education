@@ -1,7 +1,7 @@
 import React from 'react';
 import displeasedGirl from '@/assets/girl2.jpg'; // For the 'Problem' side
 import happyGirl from '@/assets/girl3.jpg';      // For the 'Solution' side
-import logo from '@/assets/Logo.jpg';            // Nirmaan Logo
+import logo from '@/assets/logo.jpg';            // Nirmaan Logo
 
 const handleScrollToContact = () => {
   console.log("Scrolling to Contact Section...");
