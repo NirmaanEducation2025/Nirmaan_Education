@@ -127,37 +127,8 @@ const AIPromise: React.FC = () => {
     videoSrc: video1,
   };
 
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const handleScroll = () => {
-      const timeline = timelineRef.current;
-      const dot = dotRef.current;
-      if (timeline && dot) {
-        const timelineRect = timeline.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        
-        const start = timeline.offsetTop - viewportHeight / 1.5;
-        const end = timeline.offsetTop + timelineRect.height - viewportHeight / 1.5;
-
-        const currentScroll = window.scrollY;
-        
-        let progress = 0;
-        if (currentScroll > start) {
-           progress = (currentScroll - start) / (end - start);
-        }
-        
-        progress = Math.min(Math.max(progress, 0), 1); // Clamp between 0 and 1
-
-        const newY = progress * (timelineRect.height - dot.offsetHeight);
-        dot.style.transform = `translateY(${newY}px)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Run on mount
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Removed timeline scroll logic
   }, []);
 
 
@@ -218,73 +189,60 @@ const AIPromise: React.FC = () => {
             </h2>
           </div>
 
-          {/* Alternating Video Timeline */}
-          <div className="relative">
-            <div ref={timelineRef} className="absolute left-1/2 top-0 h-full w-1.5 -translate-x-1/2 bg-gradient-to-b from-orange-300 to-amber-300 rounded-full" />
-            
-            <div ref={dotRef} className="absolute left-1/2 -translate-x-1/2 w-9 h-9 bg-[#FFF8F1] rounded-full flex items-center justify-center" style={{ transition: 'transform 0.1s linear' }}>
-                <div className="w-5 h-5 bg-orange-500 rounded-full border-4 border-orange-200" />
-            </div>
-
-            <div className="space-y-24">
-              {features.map((feature, index) => (
-                <div key={index} className="relative grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                  
-                  {index % 2 === 0 ? (
-                    <>
-                      <div className="md:text-right md:pr-14">
-                        <div className="inline-flex items-center gap-4 bg-orange-500 text-white font-bold font-poppins px-6 py-3 rounded-full mb-6 shadow-lg transition-transform duration-300 hover:scale-105">
-                          {feature.icon}
-                          <span className="text-3xl">{feature.title}</span>
-                        </div>
-                        <div className="space-y-6">
-                        {feature.details.map((detail, i) => (
-                          <div key={i} className="detail-point" style={{ animationDelay: `${i * 0.2}s`}}>
-                            <h3 className="font-bold font-poppins text-xl text-gray-800 mb-1">{detail.subtitle}</h3>
-                            <p className="text-gray-600 font-inter transition-colors cursor-pointer">
-                              <span className="mr-2">{detail.emoji}</span>{detail.point}
-                            </p>
-                          </div>
-                        ))}
-                        </div>
-                      </div>
-                      <div className="w-full">
-                        <video src={feature.videoSrc} autoPlay loop muted playsInline className="w-full rounded-2xl shadow-xl border-4 border-white video-card" />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-full md:order-first order-last">
-                        <video src={feature.videoSrc} autoPlay loop muted playsInline className="w-full rounded-2xl shadow-xl border-4 border-white video-card" />
-                      </div>
-                      <div className="md:pl-14">
-                        <div className="inline-flex items-center gap-4 bg-orange-500 text-white font-bold font-poppins px-6 py-3 rounded-full mb-6 shadow-lg transition-transform duration-300 hover:scale-105">
-                          {feature.icon}
-                          <span className="text-3xl">{feature.title}</span>
-                        </div>
-                        <div className="space-y-6">
-                        {feature.details.map((detail, i) => (
-                          <div key={i} className="detail-point" style={{ animationDelay: `${i * 0.2}s`}}>
-                            <h3 className="font-bold font-poppins text-xl text-gray-800 mb-1">{detail.subtitle}</h3>
-                            <p className="text-gray-600 font-inter transition-colors cursor-pointer">
-                               <span className="mr-2">{detail.emoji}</span>{detail.point}
-                            </p>
-                          </div>
-                        ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div className="text-center mt-24">
+          {/* --- NEW LAYOUT: BIG VIDEO ABOVE --- */}
+          <div className="text-center mb-24">
              <h2 className="text-4xl lg:text-5xl font-bold text-[#FF4D01] font-urbanist max-w-5xl mx-auto mb-12">
               Personalized AI that adapts and evolves with your child’s learning curve.
             </h2>
             <video src={video1Feature.videoSrc} autoPlay loop muted playsInline className="w-full rounded-2xl shadow-2xl border-4 border-white" />
+          </div>
+
+          {/* --- NEW LAYOUT: 2 VIDEOS SIDE-BY-SIDE BELOW --- */}
+          {/* Removed timeline structure */}
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+            
+            {/* Feature 1 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-full mb-8">
+                <video src={features[0].videoSrc} autoPlay loop muted playsInline className="w-full rounded-2xl shadow-xl border-4 border-white video-card" />
+              </div>
+              <div className="inline-flex items-center gap-4 bg-orange-500 text-white font-bold font-poppins px-6 py-3 rounded-full mb-6 shadow-lg transition-transform duration-300 hover:scale-105">
+                {features[0].icon}
+                <span className="text-3xl">{features[0].title}</span>
+              </div>
+              <div className="space-y-6">
+              {features[0].details.map((detail, i) => (
+                <div key={i} className="detail-point" style={{ animationDelay: `${i * 0.2}s`}}>
+                  <h3 className="font-bold font-poppins text-xl text-gray-800 mb-1">{detail.subtitle}</h3>
+                  <p className="text-gray-600 font-inter transition-colors cursor-pointer">
+                    <span className="mr-2">{detail.emoji}</span>{detail.point}
+                  </p>
+                </div>
+              ))}
+              </div>
+            </div>
+            
+            {/* Feature 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="w-full mb-8">
+                <video src={features[1].videoSrc} autoPlay loop muted playsInline className="w-full rounded-2xl shadow-xl border-4 border-white video-card" />
+              </div>
+              <div className="inline-flex items-center gap-4 bg-orange-500 text-white font-bold font-poppins px-6 py-3 rounded-full mb-6 shadow-lg transition-transform duration-300 hover:scale-105">
+                {features[1].icon}
+                <span className="text-3xl">{features[1].title}</span>
+              </div>
+              <div className="space-y-6">
+              {features[1].details.map((detail, i) => (
+                <div key={i} className="detail-point" style={{ animationDelay: `${i * 0.2}s`}}>
+                  <h3 className="font-bold font-poppins text-xl text-gray-800 mb-1">{detail.subtitle}</h3>
+                  <p className="text-gray-600 font-inter transition-colors cursor-pointer">
+                      <span className="mr-2">{detail.emoji}</span>{detail.point}
+                  </p>
+                </div>
+              ))}
+              </div>
+            </div>
+
           </div>
           
           <CallToAction />

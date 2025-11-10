@@ -1,256 +1,233 @@
-import React, { useEffect, useRef, useState } from 'react';
-import heroImage from '@/assets/hero-image.jpg';
-import vector1 from '@/assets/Vector-1.jpg';
-import vector2 from '@/assets/Vector-2.jpg';
-import quoteUp from '@/assets/quote-up.png';
+import React, { useEffect, useState } from "react";
+import heroImage from "@/assets/hero-image.jpg";
+import divider1 from "@/assets/divider1.jpg";
+import ellipseBg from "@/assets/back.jpg";
 
-const Hero = () => {
-  const plusAiRef = useRef(null);
-  const [headline1, setHeadline1] = useState('');
-  const [headline2, setHeadline2] = useState('');
+const animatedWords = [
+  "Future Leaders",
+  "Changemakers",
+  "Global Citizens",
+  "Innovators",
+  "Critical Thinkers",
+  "Confident Communicators",
+  "Empathetic Humans",
+  "Creative Problem-Solvers",
+];
+
+// ✅ Fix: make 'style' optional
+const Star = ({
+  className,
+  size,
+  style = {},
+}: {
+  className?: string;
+  size?: number;
+  style?: React.CSSProperties;
+}) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#FC6B2D"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ opacity: 0.6, ...style }}
+  >
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+  </svg>
+);
+
+
+const AnimatedWord = ({ word, onFinished }) => {
+  const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  const TYPING_SPEED = 100;
+  const ERASING_SPEED = 70;
 
-  // Animation for the "+ AI" element
   useEffect(() => {
-    let frameId;
-    let direction = 1;
-    let position = 0;
-    const maxMovement = 15; // pixels
-    const speed = -0.2; // Slowed down the animation speed
+    let timer;
+    if (isTyping && displayedText.length < word.length) {
+      timer = setTimeout(
+        () => setDisplayedText(word.substring(0, displayedText.length + 1)),
+        TYPING_SPEED
+      );
+    } else if (isTyping && displayedText.length === word.length) {
+      timer = setTimeout(() => setIsTyping(false), 1000);
+    } else if (!isTyping && displayedText.length > 0) {
+      timer = setTimeout(
+        () => setDisplayedText(word.substring(0, displayedText.length - 1)),
+        ERASING_SPEED
+      );
+    } else {
+      if (onFinished) onFinished();
+    }
+    return () => clearTimeout(timer);
+  }, [displayedText, isTyping, word, onFinished]);
 
-    const animate = () => {
-      if (plusAiRef.current) {
-        position += direction * speed;
-        if (position > maxMovement || position < -maxMovement) {
-          direction *= -1;
-        }
-        plusAiRef.current.style.transform = `translateY(${position}px)`;
-      }
-      frameId = requestAnimationFrame(animate);
-    };
-    animate();
-    return () => cancelAnimationFrame(frameId);
-  }, []);
-
-  // Looping typing animation for the headline
   useEffect(() => {
-    const text1 = 'Redefining Indian Education through ';
-    const text2 = 'Real Learning';
-    const typingSpeed = 75;
-    const erasingSpeed = 50;
-    const pauseDuration = 3500; // 3.5-second pause
+    setDisplayedText("");
+    setIsTyping(true);
+  }, [word]);
 
-    let timeoutId;
+  return (
+    <span style={{ color: "#FC6B2D", fontWeight: 600 }}>
+      {displayedText}
+      {isTyping && <span className="typing-cursor">|</span>}
+    </span>
+  );
+};
 
-    const handleTyping = () => {
-      const fullText1 = headline1 + headline2;
-      const fullText2 = text1 + text2;
-
-      if (isTyping) {
-        if (fullText1.length < fullText2.length) {
-          if (headline1.length < text1.length) {
-            setHeadline1(text1.slice(0, headline1.length + 1));
-          } else {
-            setHeadline2(text2.slice(0, headline2.length + 1));
-          }
-        } else {
-          timeoutId = setTimeout(() => setIsTyping(false), pauseDuration);
-        }
-      } else {
-        if (fullText1.length > 0) {
-          if (headline2.length > 0) {
-            setHeadline2(headline2.slice(0, -1));
-          } else {
-            setHeadline1(headline1.slice(0, -1));
-          }
-        } else {
-          setIsTyping(true);
-        }
-      }
-    };
-
-    timeoutId = setTimeout(handleTyping, isTyping ? typingSpeed : erasingSpeed);
-
-    return () => clearTimeout(timeoutId);
-  }, [headline1, headline2, isTyping]);
-
+const HeroSection = () => {
+  const [wordIndex, setWordIndex] = useState(0);
+  const currentWord = animatedWords[wordIndex];
+  const moveToNextWord = () =>
+    setWordIndex((prev) => (prev + 1) % animatedWords.length);
 
   return (
     <section
       style={{
-        position: 'relative',
-        background: '#FFF8F1',
-        minHeight: '900px',
-        width: '100%', // Use 100% instead of 100vw for better compatibility
-        overflow: 'hidden',
-        fontFamily: 'Urbanist, sans-serif',
-        padding: '2rem 0', // Add some padding
+        position: "relative",
+        background: "#FFF8F1",
+        width: "100%",
+        height: "100vh", // ✅ One single landing viewport
+        overflow: "hidden",
+        fontFamily: "Urbanist, sans-serif",
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      {/* --- ANIMATED BACKGROUND --- */}
-      <div className="background-shapes" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', width: '80px', height: '80px', background: 'rgba(255, 126, 42, 0.1)', borderRadius: '50%', animation: 'move 15s linear infinite', top: '20%', left: '10%' }} />
-          <div style={{ position: 'absolute', width: '120px', height: '120px', background: 'rgba(255, 126, 42, 0.08)', borderRadius: '50%', animation: 'move 20s linear infinite reverse', top: '50%', left: '80%' }} />
-          <div style={{ position: 'absolute', width: '60px', height: '60px', background: 'rgba(255, 126, 42, 0.12)', borderRadius: '50%', animation: 'move 25s linear infinite', top: '80%', left: '30%' }} />
-          <div style={{ position: 'absolute', width: '150px', height: '150px', background: 'rgba(255, 126, 42, 0.07)', borderRadius: '50%', animation: 'move 18s linear infinite reverse', top: '10%', left: '90%'}} />
+      <style>{`
+        @keyframes blink { 
+          0%, 100% { opacity: 1; } 
+          50% { opacity: 0; } 
+        }
+        .typing-cursor {
+          display: inline-block;
+          animation: blink 0.7s infinite;
+          margin-left: 2px;
+          color: #FC6B2D;
+        }
+      `}</style>
+
+      {/* Stars */}
+      <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
+        <Star className="absolute top-[10%] left-[8%]" size={26} />
+        <Star className="absolute top-[40%] right-[8%]" size={24} />
+        <Star className="absolute bottom-[25%] left-[12%]" size={22} />
+        <Star className="absolute bottom-[15%] right-[10%]" size={28} />
       </div>
 
-      <style>
-        {`
-          @keyframes floatAnimation { 0%, 100% { transform: translateY(0); filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.15)); } 50% { transform: translateY(-20px); filter: drop-shadow(0 30px 15px rgba(0, 0, 0, 0.25)); } }
-          @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-          @keyframes move { 0% { transform: translate(0, 0) scale(1); } 25% { transform: translate(20px, 40px) scale(1.1); } 50% { transform: translate(-30px, -10px) scale(1); } 75% { transform: translate(10px, -30px) scale(1.1); } 100% { transform: translate(0, 0) scale(1); } }
-          .typing-cursor { font-weight: 400; animation: blink 1s infinite; color: #FF6B00; }
-        `}
-      </style>
-      
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', height: '100%', minHeight: '800px'}}>
-        {/* Radial orange behind image */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '220px',
-            transform: 'translateX(-50%)',
-            width: '480px',
-            height: '480px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, #ffc8b0 0%, #fff8f1 75%)',
-            zIndex: 1,
-          }}
-        />
-
-        {/* Vector 2 PNG */}
-        <img
-          src={vector2}
-          alt=""
-          style={{
-            position: 'absolute',
-            width: 'clamp(60px, 7vw, 101px)', // Responsive width
-            top: '20%',
-            left: '200px',
-            zIndex: 30,
-            pointerEvents: 'none',
-          }}
-          draggable={false}
-        />
-
-        {/* Vector 1 PNG */}
-        <img
-          src={vector1}
-          alt=""
-          style={{
-            position: 'absolute',
-            width: 'clamp(25px, 3vw, 40px)', // Responsive width
-            top: '10%',
-            right: '180px',
-            border: '8px solid #FEB273',
-            zIndex: 30,
-            pointerEvents: 'none',
-          }}
-          draggable={false}
-        />
-
-        {/* Headline with Typing Animation */}
-        <h1
-          style={{
-            position: 'absolute',
-            top: '90px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '90%',
-            maxWidth: '950px',
-            minHeight: '154px',
-            fontWeight: 600,
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)', // Responsive font size
-            lineHeight: 1.2,
-            textAlign: 'center',
-            color: '#000',
-            letterSpacing: '-0.015em',
-            zIndex: 10,
-          }}
-        >
-          {headline1}
-          <span style={{ color: '#FF6B00' }}>{headline2}</span>
-          {isTyping && <span className="typing-cursor">|</span>}
-        </h1>
-
-        {/* + Sign and AI container with animation */}
-        <div
-          ref={plusAiRef}
-          style={{
-            position: 'absolute',
-            top: '150px',
-            right: '15%', // Responsive positioning
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            zIndex: 15,
-            cursor: 'default',
-          }}
-        >
-          <span
+      {/* Content */}
+      <div className="mx-auto px-4 lg:px-8 relative z-20 flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full">
+        {/* LEFT - Girl with ellipse */}
+        <div className="relative flex justify-center items-end w-full lg:w-1/2">
+          {/* Ellipse behind */}
+          <img
+            src={ellipseBg}
+            alt="ellipse background"
+            className="absolute z-0"
             style={{
-              fontWeight: 600,
-              fontSize: 'clamp(3rem, 6vw, 5rem)', // Responsive font size
-              color: '#000',
-              userSelect: 'none',
+              width: "520px",
+              height: "520px",
+              top: "42%",
+              left: "50%",
+              transform: "translate(-50%, -40%)",
+              objectFit: "contain",
+              pointerEvents: "none",
             }}
-          >
-            +
-          </span>
-          <span
+          />
+
+          {/* Girl image lifted slightly */}
+          <img
+            src={heroImage}
+            alt="Smiling student"
+            className="relative z-10"
             style={{
-              fontFamily: '"Figma Hand", cursive',
+              width: "100%",
+              bottom: 20,
+              maxWidth: "450px",
+              height: "auto",
+              objectFit: "contain",
+              transform: "translateY(-10px)",
+            }}
+          />
+        </div>
+
+        {/* RIGHT - Text content */}
+        <div className="w-full lg:w-1/2 text-center lg:text-left relative z-20">
+          <h1
+            style={{
               fontWeight: 700,
-              fontSize: 'clamp(3rem, 6vw, 5rem)', // Responsive font size
-              color: '#BF3A01',
-              textShadow: '0px 4px 4px rgba(0,0,0,0.25)',
-              userSelect: 'none',
+              fontSize: "clamp(2.2rem, 4vw, 4rem)",
+              lineHeight: "1.15",
+              color: "#000",
             }}
           >
-            AI
-          </span>
-        </div>
+            Shaping a Generation That{" "}
+            <span
+              style={{
+                color: "#FC6B2D",
+                display: "inline-block",
+                fontStyle: "italic",
+              }}
+            >
+              Thinks, Feels, and Leads.
+            </span>
+          </h1>
 
-        {/* Hero Image with opening animation */}
-        <img
-          src={heroImage}
-          alt="Learner"
-          style={{
-            position: 'absolute',
-            left: '500px',
-            transform: 'translateX(-50%)',
-            top: '200px',
-            width: 'clamp(300px, 30vw, 440px)', // Responsive width
-            height: 'auto',
-            zIndex: 18,
-            userSelect: 'none',
-            pointerEvents: 'none',
-            animation: 'floatAnimation 4s ease-in-out infinite',
-          }}
-          draggable={false}
-        />
+          <p
+            style={{
+              color: "#374151",
+              marginTop: "1.2rem",
+              marginBottom: "2rem",
+              fontSize: "1.05rem",
+              lineHeight: "1.7",
+              maxWidth: "520px",
+              fontWeight: 400,
+            }}
+          >
+            Nirmaan is transforming how schools nurture young minds — going
+            beyond traditional academics/textbooks to build confident,
+            emotionally intelligent, and future-ready students.
+          </p>
 
-        {/* Left Quote */}
-        <div style={{ position: 'absolute', left: '5%', top: '270px', zIndex: 20, width: 'clamp(250px, 25vw, 370px)' }}>
-            <img src={quoteUp} alt="" style={{ width: '74px', height: '64px' }} draggable={false} />
-            <p style={{ marginTop: '1rem', fontWeight: 500, fontSize: 'clamp(1rem, 1.5vw, 1.5rem)', color: '#344054' }}>
-                We teach what students need most but textbooks fail to teach
-            </p>
-        </div>
-
-        {/* Right Quote */}
-        <div style={{ position: 'absolute', right: '50px', top: '370px', zIndex: 20, width: 'clamp(250px, 25vw, 370px)', textAlign: 'right' }}>
-            <img src={quoteUp} alt="" style={{ width: '74px', height: '64px', marginLeft: 'auto' }} draggable={false} />
-            <p style={{ marginTop: '1rem', fontWeight: 500, fontSize: 'clamp(1rem, 1.5vw, 1.5rem)', color: '#344054' }}>
-                An AI that truly understands your student and teaches in the way they understand and learn best.
-            </p>
+          <div
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: 600,
+              color: "#000",
+            }}
+          >
+            We are nurturing{" "}
+            <AnimatedWord
+              key={currentWord}
+              word={currentWord}
+              onFinished={moveToNextWord}
+            />
+          </div>
         </div>
       </div>
+
+      {/* ✅ Divider slightly overlapping the girl (on top) */}
+      <img
+        src={divider1}
+        alt="Divider"
+        style={{
+          position: "absolute",
+          bottom: "60px", // Divider slightly inside hero
+          left: 0,
+          width: "100%",
+          height: "7vw",
+          objectFit: "cover",
+          zIndex: 25, // Overlaps the girl
+          pointerEvents: "none",
+        }}
+      />
     </section>
   );
 };
 
-export default Hero;
-
+export default HeroSection;
