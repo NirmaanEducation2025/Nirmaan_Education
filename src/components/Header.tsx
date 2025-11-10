@@ -70,11 +70,11 @@ const Header: React.FC = () => {
     },
     {
       label: 'As Educator',
-      href: 'https://www.nirmaan.education/hiring',
+      href: 'https://nirmaan.education/hiring-2-2/',
     },
     {
       label: 'As Channel Partner',
-      href: 'https://www.nirmaan.education/hiring',
+      href: 'https://nirmaan.education/hiring-2-2/',
     },
   ];
 
