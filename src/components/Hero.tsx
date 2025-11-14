@@ -14,7 +14,6 @@ const animatedWords = [
   "Creative Problem-Solvers",
 ];
 
-// ✅ Fix: make 'style' optional
 const Star = ({
   className,
   size,
@@ -39,7 +38,6 @@ const Star = ({
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
   </svg>
 );
-
 
 const AnimatedWord = ({ word, onFinished }) => {
   const [displayedText, setDisplayedText] = useState("");
@@ -92,11 +90,14 @@ const HeroSection = () => {
         position: "relative",
         background: "#FFF8F1",
         width: "100%",
-        height: "100vh", // ✅ One single landing viewport
+        //minHeight: "90vh",
         overflow: "hidden",
         fontFamily: "Urbanist, sans-serif",
         display: "flex",
         alignItems: "center",
+        paddingTop: "1rem", // ✅ Reduced top padding
+        paddingBottom: "2rem", // ✅ Slight bottom padding only
+        marginTop: "-60px", // ✅ Lifts entire section up closer to navbar
       }}
     >
       <style>{`
@@ -121,37 +122,34 @@ const HeroSection = () => {
       </div>
 
       {/* Content */}
-      <div className="mx-auto px-4 lg:px-8 relative z-20 flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full">
+      <div className="mx-auto px-4 lg:px-8 relative z-20 flex flex-col lg:flex-row items-center justify-between max-w-7xl w-full gap-10">
         {/* LEFT - Girl with ellipse */}
         <div className="relative flex justify-center items-end w-full lg:w-1/2">
-          {/* Ellipse behind */}
           <img
             src={ellipseBg}
             alt="ellipse background"
             className="absolute z-0"
             style={{
-              width: "520px",
-              height: "520px",
-              top: "42%",
+              width: "1500px",
+              height: "500px",
+              top: "48%",
               left: "50%",
-              transform: "translate(-50%, -40%)",
+              transform: "translate(-50%, -48%)",
               objectFit: "contain",
               pointerEvents: "none",
             }}
           />
 
-          {/* Girl image lifted slightly */}
           <img
             src={heroImage}
             alt="Smiling student"
             className="relative z-10"
             style={{
               width: "100%",
-              bottom: 20,
-              maxWidth: "450px",
+              maxWidth: "430px",
               height: "auto",
               objectFit: "contain",
-              transform: "translateY(-10px)",
+              transform: "translateY(10px)", // ✅ Slight upward lift
             }}
           />
         </div>
@@ -187,6 +185,7 @@ const HeroSection = () => {
               lineHeight: "1.7",
               maxWidth: "520px",
               fontWeight: 400,
+              marginInline: "auto",
             }}
           >
             Nirmaan is transforming how schools nurture young minds — going
@@ -211,18 +210,18 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* ✅ Divider slightly overlapping the girl (on top) */}
+      {/* Divider */}
       <img
         src={divider1}
         alt="Divider"
         style={{
           position: "absolute",
-          bottom: "60px", // Divider slightly inside hero
+          bottom: "0",
           left: 0,
           width: "100%",
-          height: "7vw",
+          height: "6vw",
           objectFit: "cover",
-          zIndex: 25, // Overlaps the girl
+          zIndex: 25,
           pointerEvents: "none",
         }}
       />

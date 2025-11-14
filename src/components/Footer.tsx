@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
   const quickLinks = [
     { name: 'About Us', id: 'about' },
     { name: 'Our Programs', id: 'programs' },
-    { name: 'AI Promise', id: 'ai-promise' },
+    { name: 'Our Promise', id: 'highlights' },
     { name: 'Impact', id: 'impact' },
   ];
 
