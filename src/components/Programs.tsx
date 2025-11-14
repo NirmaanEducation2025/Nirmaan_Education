@@ -5,6 +5,14 @@ import { Users, BookOpen, Brain } from 'lucide-react';
 import commImage from '@/assets/comskills.jpg';
 import lifeImage from '@/assets/lifeskills.jpg';
 import skillsImage from '@/assets/21skills.jpg';
+// ========================== CONTROL PANEL ==========================
+const PROGRAM_SIZES = {
+  paddingTop: 40,      // reduce or increase whole section top spacing
+  paddingBottom: 50,   // reduce or increase bottom spacing
+  gapBetweenCards: 32, // space between the program cards
+  headingMargin: 12,   // space below the main heading
+};
+// ================================================================
 
 // ============================
 // HOVER CARD COMPONENT
@@ -120,7 +128,15 @@ const programData = [
 // MAIN PROGRAMS SECTION
 // ============================
 const Programs = () => (
-  <section id="programs" className="relative py-20 lg:py-32 bg-[#FFF8F1] scroll-mt-16 overflow-hidden">
+  <section
+  id="programs"
+  className="relative bg-[#FFF8F1] scroll-mt-16 overflow-hidden"
+  style={{
+    paddingTop: PROGRAM_SIZES.paddingTop,
+    paddingBottom: PROGRAM_SIZES.paddingBottom,
+  }}
+>
+
 
     {/* Background Animation Bubbles */}
     <div className="absolute top-0 left-0 w-full h-full z-0 overflow-hidden">
@@ -163,12 +179,20 @@ const Programs = () => (
         Our Core Programs
       </h2>
 
-      <p className="text-xl font-urbanist font-bold text-[#FF4D01] mb-12">
+      <p
+  className="text-xl font-urbanist font-bold text-[#FF4D01]"
+  style={{ marginBottom: PROGRAM_SIZES.headingMargin }}
+>
+
         We teach what students need most but textbooks fail to teach.
       </p>
 
       {/* Program Cards */}
-      <div className="flex flex-col md:flex-row flex-wrap gap-8 justify-center items-stretch">
+      <div
+  className="flex flex-col md:flex-row flex-wrap justify-center items-stretch"
+  style={{ gap: PROGRAM_SIZES.gapBetweenCards }}
+>
+
         {programData.map(({ image, ...props }, index) => (
           <div
             key={props.title}
