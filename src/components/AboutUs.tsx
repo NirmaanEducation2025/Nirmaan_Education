@@ -2,13 +2,26 @@ import React from 'react';
 import displeasedGirl from '@/assets/girl2.jpg';
 import happyGirl from '@/assets/girl3.jpg';
 import logo from '@/assets/logo.jpg';
-
 const handleScrollToContact = () => {
   const contact = document.getElementById("contact");
   if (contact) {
     contact.scrollIntoView({ behavior: "smooth" });
   }
 };
+
+const SCALE = 0.78;   // 0.78 = 22% reduction. Change to 0.70, 0.85, etc.
+
+// ========================== CONTROL PANEL ==========================
+const ABOUT_SIZES = {
+  imgWidth: 440,           // bigger & placed at screen edges
+  imgHeight: 360,
+  imgOffsetY: 20,          // vertical spacing
+  pointFont: 17,
+  listGap: 16,
+  bulletSize: 10,
+  columnWidth: 360,
+};
+// ==================================================================
 
 const systemIssues = [
   "Focused only on academics",
@@ -32,51 +45,52 @@ const solutionItems = [
   "Learning is a lifelong process",
 ];
 
-const ListItem = ({ text, isSolution = false, isLast = false }) => {
-  const bulletColor = isSolution ? '#FF4D01' : '#A3A2A2';
-  const lineColor = isSolution ? '#FFDDCB' : '#A3A2A2';
-  const textColor = isSolution ? 'text-black' : 'text-gray-700';
-  const textAlign = isSolution ? 'text-left' : 'text-right';
-  const flexDirection = isSolution ? 'row' : 'row-reverse';
-
+const ListItem = ({ text, isSolution, isLast }) => {
   return (
     <div
-      className="flex items-start w-full relative"
+      className="flex relative items-start"
       style={{
-        flexDirection: flexDirection,
-        marginBottom: '16px',
+        flexDirection: isSolution ? "row" : "row-reverse",
+        marginBottom: ABOUT_SIZES.listGap,
+        width: ABOUT_SIZES.columnWidth,
       }}
     >
+      {/* Bullet */}
       <div
-        className="w-2 h-2 rounded-full flex-shrink-0 mt-2.5"
         style={{
-          backgroundColor: bulletColor,
-          marginRight: isSolution ? '12px' : '0',
-          marginLeft: isSolution ? '0' : '12px',
-          position: 'relative',
-          zIndex: 2,
+          width: ABOUT_SIZES.bulletSize,
+          height: ABOUT_SIZES.bulletSize,
+          borderRadius: "50%",
+          marginTop: 6,
+          backgroundColor: isSolution ? "#FF4D01" : "#A3A2A2",
+          marginLeft: isSolution ? 0 : 12,
+          marginRight: isSolution ? 12 : 0,
         }}
       />
-      <span
-        className={`flex-1 text-lg font-medium leading-normal ${textColor} ${textAlign}`}
+
+      {/* Text */}
+      <p
+        className="leading-tight"
         style={{
-          fontFamily: 'Urbanist, sans-serif',
-          wordBreak: 'break-word',
-          fontWeight: 500,
+          fontSize: ABOUT_SIZES.pointFont,
+          color: isSolution ? "#000" : "#555",
+          fontFamily: "Urbanist, sans-serif",
+          textAlign: isSolution ? "left" : "right",
         }}
       >
         {text}
-      </span>
+      </p>
+
+      {/* Connecting line */}
       {!isLast && (
         <div
           style={{
-            position: 'absolute',
-            [isSolution ? 'left' : 'right']: '3.5px',
-            top: '16px',
-            height: 'calc(100% + 4px)',
-            width: '1px',
-            backgroundColor: lineColor,
-            zIndex: 1,
+            position: "absolute",
+            [isSolution ? "left" : "right"]: ABOUT_SIZES.bulletSize / 2 + "px",
+            top: 22,
+            height: "calc(100% - 4px)",
+            width: "2px",
+            backgroundColor: isSolution ? "#FFC7A8" : "#BFBFBF",
           }}
         />
       )}
@@ -88,94 +102,119 @@ const AboutUs = () => {
   return (
     <section
       id="about"
-      className="w-full relative overflow-hidden"
+      className="w-full py-20 font-urbanist relative overflow-hidden"
       style={{
-        background: 'linear-gradient(to right, white 50%, #FFF1E6 50%)',
-        fontFamily: 'Urbanist, sans-serif',
-        padding: '80px 0 60px',
+        background: "linear-gradient(to right, #fff 50%, #FFF1E6 50%)",
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row justify-center mt-10 gap-4">
-          {/* LEFT SIDE */}
-          <div className="w-full lg:w-1/2 flex flex-col items-end relative p-8 lg:p-12">
-            <div className="w-full text-center lg:text-right mb-10 lg:mb-0">
-              <p className="italic font-bold text-xl mb-2 text-gray-500">- The Problem -</p>
-              <h2 className="font-bold text-3xl md:text-4xl leading-tight text-black mx-auto lg:ml-auto lg:mr-0" style={{ maxWidth: '480px' }}>
-                The ultimate goal of education isn’t good marks <br /> — it’s a good life and a great career
-              </h2>
-              <p className="italic font-normal text-lg text-gray-700 mt-4">Unfortunately, Our Education System</p>
-            </div>
 
-            <div className="w-full flex justify-end items-start relative mt-12">
-              <div className="absolute top-0 -left-24 z-0">
-                <img src={displeasedGirl} alt="Displeased student" className="w-80 h-auto object-cover grayscale" draggable={false} />
-              </div>
+      {/* LEFT EDGE IMAGE */}
+      <img
+        src={displeasedGirl}
+        alt="Displeased student"
+        className="absolute left-0 top-1/2 transform -translate-y-1/2 grayscale object-contain hidden lg:block"
+        style={{
+          width: ABOUT_SIZES.imgWidth,
+          height: ABOUT_SIZES.imgHeight,
+        }}
+      />
 
-              <div className="w-full max-w-[360px] relative z-20 mr-8">
-                {systemIssues.map((issue, index) => (
-                  <ListItem key={index} text={issue} isSolution={false} isLast={index === systemIssues.length - 1} />
-                ))}
-              </div>
-            </div>
+      {/* RIGHT EDGE IMAGE */}
+      <img
+        src={happyGirl}
+        alt="Happy student"
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 object-contain hidden lg:block"
+        style={{
+          width: ABOUT_SIZES.imgWidth,
+          height: ABOUT_SIZES.imgHeight,
+        }}
+      />
 
-            <p className="mt-8 text-base italic font-semibold text-center lg:text-right w-full px-8 text-gray-700 max-w-[420px] ml-auto leading-6">
-              Leading to Low Confidence, Poor Problem-Solving, poor communication, unhealthy, stressed, stripped of curiosity & Unemployable Graduates
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+
+        {/* ================= HEADER – Equal for both sides ================ */}
+        <div className="flex justify-between items-start gap-10">
+
+          {/* LEFT HEADER */}
+          <div className="w-1/2 text-center">
+            <p className="italic text-lg font-bold text-gray-500">- The Problem -</p>
+
+            <h2 className="text-4xl font-bold leading-tight mt-2">
+              The ultimate goal of education isn’t good marks — it’s a good life and a great career
+            </h2>
+
+            <p className="italic text-lg text-gray-600 mt-2">
+              Unfortunately, Our Education System
             </p>
           </div>
 
-          {/* RIGHT SIDE */}
-          <div className="w-full lg:w-1/2 flex flex-col items-start relative p-8 lg:p-12">
-            <div className="w-full text-center lg:text-left mb-10 lg:mb-0">
-              <p className="italic font-bold text-xl mb-2 text-[#FF4D01]">- The Solution -</p>
-              <div className="flex justify-center lg:justify-start mb-4">
-                <img src={logo} alt="Nirmaan Logo" className="h-16 w-auto" />
-              </div>
-              <p className="text-lg text-black leading-relaxed font-medium max-w-[600px]">
-                Nirmaan partners with schools to complement academics with skills that truly matter for life and career — making education holistic, measurable, and future-ready.
-              </p>
-            </div>
+          {/* RIGHT HEADER */}
+          <div className="w-1/2 text-center">
+            <p className="italic text-lg font-bold text-[#FF4D01]">- The Solution -</p>
 
-            <div className="w-full flex justify-start items-start relative mt-12">
-              <div className="absolute top-0 -right-24 z-0">
-                <img src={happyGirl} alt="Happy student" className="w-80 h-auto object-cover" draggable={false} />
-              </div>
+            <img src={logo} className="mx-auto h-20 mb-2" />
 
-              <div className="w-full max-w-[360px] relative z-20 ml-8">
-                {solutionItems.map((issue, index) => (
-                  <ListItem key={index} text={issue} isSolution={true} isLast={index === systemIssues.length - 1} />
-                ))}
-              </div>
-            </div>
-
-            <p className="mt-8 text-base italic font-semibold text-center lg:text-left w-full px-8 text-gray-700 max-w-[420px] mr-auto leading-6">
-              We shape your students into{' '}
-              <span className="font-extrabold text-[#FF4D01]">well rounded, future-ready leaders</span> with confidence, curiosity, emotional intelligence, and social skills.
+            <p className="text-[21px] font-semibold leading-snug text-gray-800 max-w-lg mx-auto">
+              Nirmaan partners with schools to complement academics with skills that truly matter.
             </p>
           </div>
+
         </div>
 
-        {/* CTA */}
-        <div className="mt-16 flex justify-center">
-          <button
-            onClick={handleScrollToContact}
-            style={{
-              background: 'linear-gradient(90deg, #FF8C00 0%, #FF6B00 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '12px',
-              padding: '14px 40px',
-              fontSize: '18px',
-              fontWeight: '700',
-              cursor: 'pointer',
-              fontFamily: 'Urbanist, sans-serif',
-              boxShadow: '0 4px 15px rgba(255, 107, 0, 0.4)',
-            }}
-            className="hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-orange-300"
-          >
-            Explore Partnership Opportunities
-          </button>
+        {/* ================= MAIN CONTENT ROW — PERFECT SYMMETRY ================= */}
+        <div className="flex justify-between items-start gap-20 mt-14">
+
+          {/* LEFT – Points only (Image moved to edge) */}
+          <div className="w-1/2 flex flex-col items-center relative">
+
+            <div>
+              {systemIssues.map((text, i) => (
+                <ListItem
+                  key={i}
+                  text={text}
+                  isSolution={false}
+                  isLast={i === systemIssues.length - 1}
+                />
+              ))}
+            </div>
+
+            <p className="mt-6 text-base italic font-semibold text-gray-600 text-center max-w-md">
+              Leading to Low Confidence, poor problem-solving, stress & unemployable graduates.
+            </p>
+          </div>
+
+          {/* RIGHT – Points only (Image at edge) */}
+          <div className="w-1/2 flex flex-col items-center relative">
+
+            <div>
+              {solutionItems.map((text, i) => (
+                <ListItem
+                  key={i}
+                  text={text}
+                  isSolution={true}
+                  isLast={i === solutionItems.length - 1}
+                />
+              ))}
+            </div>
+
+            <p className="mt-12 text-base italic font-semibold text-gray-600 text-center max-w-md">
+              We shape <span className="text-[#FF4D01] font-bold">future-ready leaders</span> with confidence, curiosity & 21st-century skills.
+            </p>
+          </div>
+
         </div>
+
+        {/* CTA BUTTON */}
+<div className="mt-16 flex justify-center">
+  <button
+    onClick={handleScrollToContact}
+    className="px-10 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl text-lg font-bold shadow-lg hover:scale-105 transition"
+  >
+    Explore Partnership Opportunities
+  </button>
+</div>
+
+
       </div>
     </section>
   );
