@@ -272,10 +272,10 @@ const Hiring: React.FC = () => {
 </p>
 
 <div className="flex gap-6 mt-3 text-sm font-semibold text-orange-600">
-  <button onClick={() => (window.location.href = "/educator")} className="hover:underline">
+  <button onClick={() => (window.location.href = "/hiring")} className="hover:underline">
     As Educator
   </button>
-  <button onClick={() => (window.location.href = "/partner")} className="hover:underline">
+  <button onClick={() => (window.location.href = "/hiring")} className="hover:underline">
     As Partner
   </button>
 </div>
