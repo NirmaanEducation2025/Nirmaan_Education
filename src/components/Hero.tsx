@@ -172,7 +172,7 @@ const HeroSection = () => {
                 fontStyle: "italic",
               }}
             >
-              Thinks, Feels, and Leads.
+              Replace
             </span>
           </h1>
 
