@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link } from "react-router-dom";
 import emailjs from '@emailjs/browser';
 import { Mail, Phone, Send, Linkedin, Youtube, MessageSquare, Send as TelegramIcon } from 'lucide-react';
 
@@ -151,7 +152,7 @@ const Contact: React.FC = () => {
                 </a>
               </div>
 
-              {/* NEW BUTTONS */}
+              {/* Updated Buttons */}
               <div className="mt-6 flex flex-col gap-3">
 
                 <a
