@@ -155,14 +155,14 @@ const Contact: React.FC = () => {
               <div className="mt-6 flex flex-col gap-3">
 
                 <a
-                  href="/hiring"
+                  href="/educator"
                   className="w-full text-center px-5 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-md transition-transform hover:scale-[1.03] hover:bg-orange-600"
                 >
                   As Educator
                 </a>
 
                 <a
-                  href="/hiring"
+                  href="/partner"
                   className="w-full text-center px-5 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-md transition-transform hover:scale-[1.03] hover:bg-orange-600"
                 >
                   As Channel Partner
