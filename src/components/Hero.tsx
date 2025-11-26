@@ -159,7 +159,7 @@ const HeroSection = () => {
           <h1
             style={{
               fontWeight: 700,
-              fontSize: "clamp(2.2rem, 4vw, 4rem)",
+              fontSize: "clamp(2.0rem, 3vw, 3rem)",
               lineHeight: "1.15",
               color: "#000",
             }}
